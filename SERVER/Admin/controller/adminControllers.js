@@ -1,4 +1,4 @@
-const adminProfileModel = require("../models/adminProfileSchema");
+const adminProfileModel = require("../../models/adminProfileSchema");
 const bcrypt = require("bcrypt");
 
 exports.createAdminProfile= async(req,res) => {

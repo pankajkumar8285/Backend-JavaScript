@@ -39,27 +39,26 @@ exports.updateProfile = async (req, res) => {
         const id = req.params.id;
         const { name, dob, phone, email } = req.body;
         const filter = {
-            _id: id
+            phone: req.decoded.phone
         };
-        const data = {
-            name: name,
-            dob: dob,
-            phone: phone,
-            email: email,
-            image: req.file.filename
-        };
-        const options = {
-            new: true,
-        };
-       const result = await userProfileModel.findByIdAndUpdate(filter, data, options);
-    //    const result = await userProfileModel.findOne(filter);
-    //     req.name = name;
-    //     req.dob = dob;
-    //     req.phone = phone;
-    //     req.email = email;
-    //     image = req.file.filename;
-    //     console.log(result)
-        //await result.save();
+        // const data = {
+        //     name: name,
+        //     dob: dob,
+        //     phone: phone,
+        //     email: email,
+        //     image: req.file.filename
+        // };
+        // const options = {
+        //     new: true,
+        // };
+       //const result = await userProfileModel.findByIdAndUpdate(filter, data, options);
+       let result = await userProfileModel.findOne(filter);
+        req.name = name;
+        req.dob = dob;
+        req.phone = phone;
+        req.email = email;
+        image = req.file.filename;
+        await result.save();
         res
             .status(200)
             .json({ code: 200, message: "User profile updated successfully" });

@@ -15,16 +15,23 @@ exports.userProfileLogin = async(req,res) => {
         if (result) {
             if (flag) {
 
-                jwt.sign({ phone : phone }, process.env.PRIVATE_KEY, { expiresIn: "1d" }, function(err, token) {
+                jwt.sign({ userId : result._id }, process.env.PRIVATE_KEY, { expiresIn: "1d" }, function(err, token) {
                     if (err) {
                         console.log(err)
                         res.status(400).json({code:400, message: "Internal Server error", Error: err});
                     }else {
-                        res.status(200).json({code: 200, message: "Login successfully", Token : token})
+                        res.cookie("token",token, {
+                            maxAge: 24 * 60 * 60 * 1000,
+                            httpOnly: true,
+                            secure: true,
+                            sameSite: "strict"
+                        });
+                        res.status(200).json({code: 200, message: "Login successfully"})
                     }
                   });
             }
             else {
+
                 res.status(200).json({code: 200, message: "Wrong Password"});
             }
 
