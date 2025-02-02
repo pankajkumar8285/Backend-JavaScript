@@ -33,3 +33,17 @@
         res.status(500).json({code: 500, message: "Internal server error"})
     }
  }
+ exports.adminLogout = async(req,res) => {
+    try {
+        const cookieOption = {
+            expires: new Date(),
+            httpOnly: true
+        }
+        res.cookie("token", null, cookieOption);
+        res.status(200).json({code: 200, message: "Logout successfully"});
+
+    }catch (err) {
+        res.status(500).json({code: 500, message: "Internal Server Error", Error: err})
+        
+    }
+}

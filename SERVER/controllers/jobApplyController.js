@@ -16,7 +16,7 @@ exports.applyJob = async(req,res) => {
     try {
         const {userId,jobId} = req.body;
         const data = {
-            userId:userId,
+            userId : userId,
             jobId:jobId
 
         }
@@ -40,10 +40,18 @@ exports.getAppliedJob = async(req, res) => {
             }
         }, {
             $lookup: {
-                from: "user",
+                from: "users",
                 localField: "userId",
                 foreignField: "_id",
                 as: "usersDetails"
+            }
+        }
+        , {
+            $lookup: {
+                from: "jobs",
+                localField: "jobId",
+                foreignField: "_id",
+                as: "jobsDetails"
             }
         }, {
             $unwind: "$usersDetails",

@@ -41,7 +41,7 @@ exports.updateJob = async(req,res) => {
 
 exports.deleteJob = async(req, res) => {
     try {
-        const id = id;
+        const id = req.params.id;
         const filter = {
             _id : id
         };

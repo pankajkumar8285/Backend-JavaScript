@@ -36,29 +36,31 @@ exports.createProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
     try {
-        const id = req.params.id;
+        //const id = req.params.id;
         const { name, dob, phone, email } = req.body;
         const filter = {
-            phone: req.decoded.phone
+            id: req.decoded._id
         };
-        // const data = {
-        //     name: name,
-        //     dob: dob,
-        //     phone: phone,
-        //     email: email,
-        //     image: req.file.filename
-        // };
-        // const options = {
-        //     new: true,
-        // };
-       //const result = await userProfileModel.findByIdAndUpdate(filter, data, options);
-       let result = await userProfileModel.findOne(filter);
-        req.name = name;
-        req.dob = dob;
-        req.phone = phone;
-        req.email = email;
-        image = req.file.filename;
-        await result.save();
+        const data = {
+            name: name,
+            dob: dob,
+            phone: phone,
+            email: email,
+            image: req.file.filename
+        };
+        const options = {
+            new: true,
+        };
+       const result = await userProfileModel.findOneAndUpdate(filter, data, options);
+    //    let result = await userProfileModel.findOne(filter);
+    //     req.name = name;
+    //     req.dob = dob;
+    //     req.phone = phone;
+    //     req.email = email;
+    //     image = req.file.filename;
+    //     await result.save();
+    //     //console.log(ress);
+
         res
             .status(200)
             .json({ code: 200, message: "User profile updated successfully" });
@@ -72,15 +74,15 @@ exports.updateProfile = async (req, res) => {
 
 exports.deleteProfile = async (req, res) => {
     try {
-        const id = req.params.id;
-        const { status } = req.body;
+        //const id = req.params.id;
+        const {phone,status } = req.body;
         const data = {
             status: status.toUpperCase(),
         };
         const filter = {
-            _id: id,
+            phone: phone,
         };
-        await userProfileModel.findByIdAndUpdate(filter, data);
+        await userProfileModel.findOneAndUpdate(filter, data);
         res
             .status(200)
             .json({ code: 200, message: "User profile deleted successfully" });
@@ -93,11 +95,13 @@ exports.deleteProfile = async (req, res) => {
 
 exports.userProfile = async (req, res) => {
     try {
-        const id = req.params.id;
+        //const id = req.params.id;
+        const {phone} = req.body;
         const filter = {
-            _id: id,
+            phone:phone,
         };
         const temp = {
+            _id: 0,
             password: 0,
             createdAt: 0,
         };

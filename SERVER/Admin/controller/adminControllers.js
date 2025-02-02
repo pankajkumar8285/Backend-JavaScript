@@ -1,9 +1,10 @@
 const adminProfileModel = require("../../models/adminProfileSchema");
 const bcrypt = require("bcrypt");
+require("dotenv").config();
 
 exports.createAdminProfile= async(req,res) => {
     try {
-        const {email,password} = req.body;
+        const {name,phone,email,password} = req.body;
         bcrypt.genSalt(10, async function (err, salt) {
                     bcrypt.hash(password, salt, async function (err, hash) {
                         if (err) {
@@ -12,6 +13,8 @@ exports.createAdminProfile= async(req,res) => {
                                 .json({ code: 400, message: "Error hashing password", Error: err });
                         } else {
                             const data = {
+                                name: name,
+                                phone: phone,
                                 email: email,
                                 password: hash,
                             };
@@ -31,30 +34,36 @@ exports.createAdminProfile= async(req,res) => {
 
 exports.adminProfileUpdate = async(req,res) => {
     try {
-        const {email} = req.body;
-        const id = req.params.id;
-        const filter = {
-            _id: id
-        }
-        const data = {
-            email : email
-        }
-        await adminProfileModel.findByIdAndUpdate(filter,data)
+        const { name, phone, email } = req.body;
+                const filter = {
+                    id:req.decoded.id
+                };
+                const data = {
+                    name :name,
+                    phone :phone,
+                    email :email,
+                    image:req.file.filename,
+                }
+                await adminProfileModel.findOneAndUpdate(filter,data);
+                
         res.status(200).json({code: 200, message: "Admin profile updated successfully"});
 
 
     }catch (err) {
+        console.log(err);
         res.status(500).json({code: 500, message: "Internal Server Error", Error: err})
     }
 }
 
 exports.adminProfile = async (req, res) => {
     try {
-        const id = req.params.id;
+        //const id = req.params.id;
+        const {phone} = req.body;
         const filter = {
-            _id: id,
+            phone:phone,
         };
         const temp = {
+            _id : 0,
             password: 0,
             createdAt: 0,
         };
